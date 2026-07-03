@@ -19,10 +19,9 @@
         </div>
 
         <div class="border-t border-gray-200 pt-8 mb-10 flex space-x-4">
-            <a href="{{ route('products.create') }}" class="bg-blue-600 text-white px-6 py-2 rounded font-bold text-base hover:bg-blue-700">新規商品登録</a>
-            <a href="{{ route('profile.edit') }}" class="bg-gray-500 text-white px-6 py-2 rounded font-bold text-base hover:bg-gray-600">アカウント編集</a>
+            <a href="{{ route('products.create') }}" class="btn-blue">新規商品登録</a>
+            <a href="{{ route('profile.edit') }}" class="btn-gray">アカウント編集</a>
         </div>
-
         <h3 class="text-2xl font-bold text-gray-800 mb-6">&lt;出品商品&gt;</h3>
         <div class="border border-gray-200 rounded-lg overflow-hidden mb-10">
             <table class="w-full text-left border-collapse">
@@ -34,22 +33,22 @@
                         <th class="p-5"></th>
                     </tr>
                 </thead>
-                {{-- 出品商品リストのテーブル内 --}}
                 <tbody class="divide-y divide-gray-200">
-                    @foreach ($myProducts as $product)
+                    @forelse ($myProducts as $product)
                     <tr class="hover:bg-gray-50">
                         <td class="p-5 text-gray-800 text-lg">{{ $product->id }}</td>
-                        <td class="p-5 font-bold text-gray-900 text-lg">{{ $product->name }}</td>
+                        <td class="p-5 font-bold text-gray-900 text-lg">{{ $product->product_name }}</td>
                         <td class="p-5 text-gray-900 font-bold text-lg">¥{{ number_format($product->price) }}</td>
                         <td class="p-5 text-right">
-                            {{-- ここをurl('/mypage/'.$id) にすることで確実な遷移を実現 --}}
-                            <a href="{{ url('/mypage/' . $product->id) }}" 
-                               class="inline-block bg-emerald-600 text-white px-6 py-2 rounded font-bold text-base hover:bg-emerald-700">
+                            <a href="{{ route('mypage.show', $product->id) }}" 
+                               class="inline-block bg-emerald-600 text-white px-6 py-2 rounded font-bold text-base hover:bg-emerald-700 transition">
                                詳細
                             </a>
                         </td>
                     </tr>
-                    @endforeach
+                    @empty
+                    <tr><td colspan="4" class="p-5 text-center text-gray-500">出品中の商品はありません</td></tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
@@ -66,14 +65,16 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
-                    @foreach ($myPurchases as $order)
+                    @forelse ($mySales as $order)
                     <tr class="hover:bg-gray-50">
-                        <td class="p-5 font-bold text-gray-900 text-lg">{{ $order->product->name }}</td>
-                        <td class="p-5 text-gray-700 text-lg">{{ $order->product->description }}</td>
-                        <td class="p-5 text-gray-900 font-bold text-lg">¥{{ number_format($order->product->price) }}</td>
+                        <td class="p-5 font-bold text-gray-900 text-lg">{{ $order->product->product_name ?? '商品不明' }}</td>
+                        <td class="p-5 text-gray-700 text-lg">{{ $order->product->description ?? '-' }}</td>
+                        <td class="p-5 text-gray-900 font-bold text-lg">¥{{ number_format($order->price) }}</td>
                         <td class="p-5 text-gray-800 text-lg">{{ $order->quantity }}</td>
                     </tr>
-                    @endforeach
+                    @empty
+                    <tr><td colspan="4" class="p-5 text-center text-gray-500">購入履歴はありません</td></tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

@@ -12,7 +12,7 @@
                 <input type="number" name="min_price" value="{{ request('min_price') }}" class="border border-gray-300 rounded px-4 py-2 w-32 text-base" placeholder="最低価格">
                 <span class="text-gray-500 font-bold">~</span>
                 <input type="number" name="max_price" value="{{ request('max_price') }}" class="border border-gray-300 rounded px-4 py-2 w-32 text-base" placeholder="最高価格">
-                <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded font-bold text-base hover:bg-blue-700 transition">検索</button>
+                <button type="submit" class="btn-blue">検索</button>
             </form>
 
             {{-- 商品一覧テーブル --}}

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
-use App\Models\Purchase;
+use App\Models\Sale;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -48,7 +48,7 @@ class PurchaseController extends Controller
                     $product->decrement('stock', $item['quantity']);
 
                     // 2. 購入履歴を保存
-                    Purchase::create([
+                    Sale::create([
                         'user_id'    => Auth::id(),
                         'product_id' => $product->id,
                         'quantity'   => $item['quantity'],
@@ -73,11 +73,11 @@ class PurchaseController extends Controller
      */
     public function mypage()
     {
-        $purchases = Purchase::with('product')
+        $sales = Sale::with('product')
             ->where('user_id', Auth::id())
             ->orderBy('created_at', 'asc')
             ->paginate(10);
             
-        return view('mypage.purchases', compact('purchases'));
+        return view('mypage.purchases', compact('sales'));
     }
 }

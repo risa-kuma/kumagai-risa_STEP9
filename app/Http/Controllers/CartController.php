@@ -24,19 +24,21 @@ class CartController extends Controller
         $productId = $request->input('product_id');
         $quantity = (int)$request->input('quantity', 1);
 
-        $product = Product::findOrFail($productId);
+        // リレーションの company を一緒に読み込む
+        $product = Product::with('company')->findOrFail($productId);
         $cart = session()->get('cart', []);
 
         if (isset($cart[$productId])) {
             $cart[$productId]['quantity'] += $quantity;
         } else {
-            // 新設計のカラムを優先しつつ、古いカラムがあればそれを使う安全な記述
             $cart[$productId] = [
-                'name'     => $product->product_name ?? $product->name,
-                'price'    => $product->price,
-                'quantity' => $quantity,
-                'image'    => $product->img_path ?? $product->image,
-                'stock'    => $product->stock,
+                'name'         => $product->product_name ?? $product->name,
+                'price'        => $product->price,
+                'quantity'     => $quantity,
+                'image'        => $product->img_path ?? $product->image,
+                'stock'        => $product->stock,
+                // リレーションから会社名を取得
+                'company_name' => $product->company->company_name ?? 'TNG', 
             ];
         }
 
@@ -54,7 +56,7 @@ class CartController extends Controller
 
         foreach ($quantities as $id => $quantity) {
             if (isset($cart[$id])) {
-                $stock = isset($cart[$id]['stock']) ? $cart[$id]['stock'] : 99;
+                $stock = $cart[$id]['stock'] ?? 99;
                 
                 $newQuantity = max(1, (int)$quantity);
                 $cart[$id]['quantity'] = min($newQuantity, $stock);
@@ -62,7 +64,9 @@ class CartController extends Controller
         }
 
         session()->put('cart', $cart);
-        return redirect()->route('purchase.index');
+        // モーダル形式にするため、このままカート画面に戻すか、
+        // 遷移させたい場合は route を適宜指定してください。
+        return redirect()->route('cart.index');
     }
 
     /**

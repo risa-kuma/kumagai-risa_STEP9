@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Purchase extends Model
+class Sale extends Model
 {
     use HasFactory;
 
     // 対応するテーブル名
-    protected $table = 'purchases';
+    protected $table = 'sales';
 
     // 更新可能なカラム（ホワイトリスト）
     protected $fillable = [

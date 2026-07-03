@@ -32,14 +32,10 @@
 
             {{-- ボタンエリア --}}
             <div class="flex items-center gap-4">
-                <button type="submit" 
-                        class="bg-blue-600 text-white px-6 py-2 rounded font-bold hover:bg-blue-700 transition">
-                    送信
-                </button>
-                <a href="{{ route('products.index') }}" 
-                   class="bg-gray-500 text-white px-6 py-2 rounded font-bold hover:bg-gray-600 transition">
-                    戻る
-                </a>
+            <button type="submit" class="btn-blue">送信</button>
+            <a href="{{ route('products.index') }}" class="btn-gray">
+                戻る
+            </a>
             </div>
         </form>
     </div>

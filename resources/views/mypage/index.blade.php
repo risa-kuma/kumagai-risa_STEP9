@@ -3,7 +3,7 @@
         <h1 class="text-2xl font-bold mb-6">マイページ</h1>
         
         <div class="mb-8">
-            <a href="{{ route('profile.edit') }}" style="background-color: #4f46e5;" class="text-white px-4 py-2 rounded text-sm mb-4 inline-block hover:opacity-90 transition">
+            <a href="{{ route('profile.edit') }}" class="btn-indigo">
                 アカウント編集
             </a>
             <div class="flex justify-between bg-white p-4 rounded shadow-sm border border-gray-100">
@@ -22,7 +22,7 @@
         <div class="mb-12">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-lg font-bold">&lt;出品商品&gt;</h2>
-                <a href="{{ route('products.create') }}" style="background-color: #3b82f6;" class="text-white px-4 py-2 rounded text-sm hover:opacity-90 transition">
+                <a href="{{ route('products.create') }}" class="btn-blue">
                     新規登録
                 </a>
             </div>
@@ -34,15 +34,14 @@
                     <th class="p-3">料金(¥)</th>
                     <th class="p-3"></th>
                 </tr>
-                {{-- $loop->iteration を使用して 1 から始まる連番を表示 --}}
                 @forelse($myProducts as $product)
                 <tr class="border-b">
-                    <td class="p-3">{{ $loop->iteration }}</td>
-                    <td class="p-3 font-bold">{{ $product->name }}</td>
+                    <td class="p-3">{{ $product->id }}</td>
+                    <td class="p-3 font-bold">{{ $product->product_name }}</td>
                     <td class="p-3">{{ $product->description }}</td>
                     <td class="p-3">{{ number_format($product->price) }}</td>
                     <td class="p-3 text-right">
-                        <a href="{{ route('mypage.show', $product->id) }}" style="background-color: #10b981;" class="text-white px-4 py-1 rounded text-sm hover:opacity-90 transition">
+                        <a href="{{ route('mypage.show', $product->id) }}" class="btn-emerald">
                             詳細
                         </a>
                     </td>
@@ -63,12 +62,12 @@
                     <th class="p-3">料金(¥)</th>
                     <th class="p-3">個数</th>
                 </tr>
-                @forelse($myPurchases as $purchase)
+                @forelse($mySales as $sale)
                 <tr class="border-b">
-                    <td class="p-3 font-bold">{{ $purchase->product->name ?? '商品不明' }}</td>
-                    <td class="p-3">{{ $purchase->product->description ?? '-' }}</td>
-                    <td class="p-3">{{ number_format($purchase->price) }}</td>
-                    <td class="p-3">{{ $purchase->quantity }}</td>
+                    <td class="p-3 font-bold">{{ $sale->product->product_name ?? '商品不明' }}</td>
+                    <td class="p-3">{{ $sale->product->description ?? '-' }}</td>
+                    <td class="p-3">{{ number_format($sale->price) }}</td>
+                    <td class="p-3">{{ $sale->quantity }}</td>  
                 </tr>
                 @empty
                 <tr><td colspan="4" class="p-4 text-center text-gray-500">購入履歴はありません</td></tr>

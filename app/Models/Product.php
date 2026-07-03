@@ -27,10 +27,31 @@ class Product extends Model
     ];
 
     /**
-     * お気に入りリレーション
+     * いいねリレーション
      */
-    public function favorites()
+    public function likes()
     {
-        return $this->hasMany(Favorite::class);
+        return $this->hasMany(Like::class);
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(\App\Models\Company::class);
+    }
+    public function scopeFiltered($query, $name, $minPrice, $maxPrice)
+    {
+    return $query->when($name, fn($q) => $q->where('product_name', 'like', "%{$name}%"))
+                 ->when($minPrice, fn($q) => $q->where('price', '>=', $minPrice))
+                 ->when($maxPrice, fn($q) => $q->where('price', '<=', $maxPrice));
+    }
+
+    public function scopeOfUser($query, $userId)
+    {
+        return $query->where('user_id', $userId)->orderBy('id', 'asc');
+    }
+
+    public function scopeExcludeUser($query, $userId)
+    {
+        return $query->where('user_id', '!=', $userId);
     }
 }

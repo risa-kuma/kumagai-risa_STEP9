@@ -1,3 +1,29 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    /* プライマリボタン（青系） */
+    .btn-blue {
+        @apply bg-blue-600 text-white px-6 py-2 rounded font-bold text-base hover:bg-blue-700 transition;
+    }
+
+    /* 編集・グレー系ボタン */
+    .btn-gray {
+        @apply bg-gray-500 text-white px-6 py-2 rounded font-bold text-base hover:bg-gray-600 transition;
+    }
+
+    /* 詳細・緑系ボタン */
+    .btn-emerald {
+        @apply bg-emerald-600 text-white px-6 py-2 rounded font-bold text-base hover:bg-emerald-700 transition;
+    }
+
+    /* インラインで使っていた少し小さめのボタン */
+    .btn-small-indigo {
+        @apply bg-indigo-600 text-white px-4 py-2 rounded text-sm mb-4 inline-block hover:opacity-90 transition;
+    }
+
+    [x-cloak] {
+        display: none !important;
+    }
+}

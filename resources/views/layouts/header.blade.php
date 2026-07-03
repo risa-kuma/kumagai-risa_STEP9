@@ -8,19 +8,19 @@
 
         {{-- 右側：ナビゲーションとログアウトボタン --}}
         <div class="flex items-center gap-6 text-sm">
-            <a href="{{ route('products.index') }}" style="color: #4f46e5;" class="hover:underline font-medium">Home</a>
-            <a href="{{ route('mypage.index') }}" style="color: #4f46e5;" class="hover:underline font-medium">マイページ</a>
+            {{-- Home・マイページ：インラインスタイルを排除 --}}
+            <a href="{{ route('products.index') }}" class="text-indigo-600 hover:underline font-medium">Home</a>
+            <a href="{{ route('mypage.index') }}" class="text-indigo-600 hover:underline font-medium">マイページ</a>
             
             <span class="text-gray-600">
                 ログインユーザー: <span class="font-semibold text-gray-800">{{ Auth::user()->name ?? 'TTUU' }}</span>
             </span>
 
-            {{-- ログアウトボタン：画像通りの赤茶色（#b75a4b）を強制適用 --}}
+            {{-- ログアウトボタン：インラインスタイルを排除しTailwindクラスで定義 --}}
             <form method="POST" action="{{ route('logout') }}" class="inline">
                 @csrf
                 <button type="submit" 
-                        style="background-color: #b75a4b !important; color: #ffffff !important;" 
-                        class="px-4 py-2 rounded text-sm font-medium shadow-sm transition hover:opacity-90">
+                        class="bg-red-800 text-white px-4 py-2 rounded text-sm font-medium shadow-sm transition hover:opacity-90">
                     ログアウト
                 </button>
             </form>

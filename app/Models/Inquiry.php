@@ -9,5 +9,10 @@ class Inquiry extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'email', 'message'];
+    // 指摘3対応：テーブルのカラムに合わせて修正
+    protected $fillable = [
+        'user_id', 
+        'title', 
+        'body'
+    ];
 }

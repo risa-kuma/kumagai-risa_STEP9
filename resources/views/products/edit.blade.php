@@ -7,23 +7,31 @@
             @csrf
             @method('PUT')
 
-            {{-- 商品名：name -> product_name に変更 --}}
+            {{-- 商品名 --}}
             <div>
                 <label class="block text-sm font-medium text-gray-700">商品名</label>
                 <input type="text" name="product_name" value="{{ old('product_name', $product->product_name) }}" class="mt-1 block w-full rounded border-gray-300 shadow-sm border p-2" required>
             </div>
 
+            {{-- 価格 --}}
             <div>
                 <label class="block text-sm font-medium text-gray-700">価格</label>
                 <input type="number" name="price" value="{{ old('price', $product->price) }}" class="mt-1 block w-full rounded border-gray-300 shadow-sm border p-2" required>
             </div>
 
+            {{-- 在庫数（指摘1対応：追加） --}}
+            <div>
+                <label class="block text-sm font-medium text-gray-700">在庫数</label>
+                <input type="number" name="stock" value="{{ old('stock', $product->stock) }}" class="mt-1 block w-full rounded border-gray-300 shadow-sm border p-2" required min="0">
+            </div>
+
+            {{-- 説明 --}}
             <div>
                 <label class="block text-sm font-medium text-gray-700">商品説明</label>
                 <textarea name="description" rows="4" class="mt-1 block w-full rounded border-gray-300 shadow-sm border p-2" required>{{ old('description', $product->description) }}</textarea>
             </div>
 
-            {{-- 画像：image -> img_path に変更 --}}
+            {{-- 画像 --}}
             <div>
                 <label class="block text-sm font-medium text-gray-700">商品画像</label>
                 @if($product->img_path)
@@ -35,8 +43,9 @@
             </div>
 
             <div class="flex items-center space-x-4 pt-4 border-t">
-                <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded font-bold hover:bg-blue-700">更新する</button>
-                <a href="{{ route('mypage.index') }}" class="text-gray-600 hover:text-gray-900 font-medium">戻る</a>
+                <button type="submit" class="btn-blue">更新する</button>
+                {{-- 「戻る」先は要件に合わせて適宜調整してください（詳細画面への遷移が好ましい場合もあります） --}}
+                <a href="{{ route('mypage.index') }}" class="btn-gray">戻る</a>
             </div>
         </form>
     </div>

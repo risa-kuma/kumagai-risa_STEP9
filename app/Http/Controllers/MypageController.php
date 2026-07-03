@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use App\Models\Product;
-use App\Models\Purchase;
+use App\Models\Sale;
 
 class MypageController extends Controller
 {
@@ -15,13 +15,16 @@ class MypageController extends Controller
     {
         $user = Auth::user();
         
-        // 修正：自分の出品商品のみを取得するように絞り込み
-        $myProducts = Product::where('user_id', $user->id)->orderBy('id', 'asc')->get();
+        // 自分の出品商品を取得（既存の通り）
+        $myProducts = Product::ofUser($user->id)->orderBy('id', 'asc')->get();
         
-        // 自分の購入履歴を取得
-        $myPurchases = Purchase::with('product')->where('user_id', $user->id)->get();
+        // 指摘3対応：購入した商品を「購入日（created_at）の昇順」で取得
+        $mySales = Sale::with('product')
+            ->where('user_id', $user->id)
+            ->orderBy('created_at', 'asc')
+            ->get();
         
-        return view('mypage.index', compact('user', 'myProducts', 'myPurchases'));
+        return view('mypage.index', compact('user', 'myProducts', 'mySales'));
     }
 
     /**
@@ -29,7 +32,6 @@ class MypageController extends Controller
      */
     public function show($id)
     {
-        // 念のため、自分が登録した商品であるか確認（または単に検索）
         $product = Product::findOrFail($id);
         
         return view('mypage.show', compact('product'));
@@ -51,7 +53,7 @@ class MypageController extends Controller
     {
         $product = Product::findOrFail($id);
         
-        // 必要に応じて、ログインユーザーが所有者かチェックを入れるとより安全です
+        // ログインユーザーが所有者かチェック
         if ($product->user_id !== Auth::id()) {
             return redirect()->route('mypage.index')->with('error', '権限がありません');
         }

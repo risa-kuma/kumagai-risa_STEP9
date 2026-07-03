@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory; // 追加
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable; // HasFactory を追加
 
     /**
      * The attributes that are mass assignable.
@@ -17,10 +18,11 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        'name_kanji', // 追加
+        'name_kanji',
         'name_kana',
         'email',
         'password',
+        'company_id',
     ];
 
     /**

@@ -22,8 +22,11 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input): User
     {
+        // 1. バリデーションに name_kanji と name_kana を追加
         Validator::make($input, [
-            'name' => ['required', 'string', 'max:255'],
+            'name'       => ['required', 'string', 'max:255'],
+            'name_kanji' => ['required', 'string', 'max:255'],
+            'name_kana'  => ['required', 'string', 'max:255'],
             'email' => [
                 'required',
                 'string',
@@ -34,10 +37,13 @@ class CreateNewUser implements CreatesNewUsers
             'password' => $this->passwordRules(),
         ])->validate();
 
+        // 2. User::create 時にも各項目を渡すように変更
         return User::create([
-            'name' => $input['name'],
-            'email' => $input['email'],
-            'password' => Hash::make($input['password']),
+            'name'       => $input['name'],
+            'name_kanji' => $input['name_kanji'],
+            'name_kana'  => $input['name_kana'],
+            'email'      => $input['email'],
+            'password'   => Hash::make($input['password']),
         ]);
     }
 }

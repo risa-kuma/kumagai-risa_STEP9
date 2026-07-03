@@ -14,7 +14,7 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Product::where('user_id', '!=', Auth::id());
+        $query = Product::excludeUser(Auth::id());
 
         if ($request->filled('name')) {
             $query->where('product_name', 'like', '%' . $request->name . '%');
@@ -67,17 +67,18 @@ class ProductController extends Controller
         return redirect()->route('mypage.index')->with('success', '商品を登録しました');
     }
 
-    /**
+   /**
      * 商品詳細表示
      */
     public function show($id)
     {
-        $product = Product::findOrFail($id);
-        $isFavorite = false;
+        $product = Product::with('company')->findOrFail($id);
+        
+        $isLike = false;
         if (Auth::check()) {
-            $isFavorite = $product->favorites()->where('user_id', Auth::id())->exists();
+            $isLike = $product->likes()->where('user_id', Auth::id())->exists();
         }
-        return view('products.show', compact('product', 'isFavorite'));
+        return view('products.show', compact('product', 'isLike'));
     }
 
     /**
@@ -94,7 +95,6 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // stockのバリデーションを追加しました
         $validated = $request->validate([
             'product_name' => 'required|string|max:255',
             'price'        => 'required|integer|min:0',
@@ -106,7 +106,6 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
 
         if ($request->hasFile('img_path')) {
-            // 古い画像があれば削除（オプション）
             if ($product->img_path) {
                 Storage::disk('public')->delete($product->img_path);
             }
@@ -114,7 +113,9 @@ class ProductController extends Controller
         }
 
         $product->update($validated);
-        return redirect()->route('mypage.index')->with('success', '更新しました');
+
+        // 【修正点】要件に基づき、遷移先を「マイページ」から「出品商品詳細画面」に変更
+        return redirect()->route('products.show', $product->id)->with('success', '商品を更新しました');
     }
 
     /**
@@ -133,19 +134,19 @@ class ProductController extends Controller
     /**
      * お気に入り登録・解除処理
      */
-    public function favorite(Product $product)
+    public function like(Product $product)
     {
         if (!Auth::check()) return redirect()->route('login');
         
         $user = Auth::user();
-        $favorite = $product->favorites()->where('user_id', $user->id);
+        $like = $product->likes()->where('user_id', $user->id);
 
-        if ($favorite->exists()) {
-            $favorite->delete();
-            $message = 'お気に入りを解除しました。';
+        if ($like->exists()) {
+            $like->delete();
+            $message = 'いいねを解除しました。';
         } else {
-            $product->favorites()->create(['user_id' => $user->id]);
-            $message = 'お気に入りに登録しました！';
+            $product->likes()->create(['user_id' => $user->id]);
+            $message = 'いいねしました！';
         }
 
         return back()->with('success', $message);
